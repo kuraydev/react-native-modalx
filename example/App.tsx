@@ -12,6 +12,10 @@ import {
   View,
 } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import {
+  SafeAreaProvider,
+  useSafeAreaInsets,
+} from "react-native-safe-area-context";
 import { BlurView } from "expo-blur";
 import Modal, {
   ModalManager,
@@ -19,6 +23,9 @@ import Modal, {
   registerAnimation,
   useModal,
 } from "react-native-modalx";
+
+/** Minimum gap above the bottom edge / home indicator on every sheet. */
+const BOTTOM_INSET_MIN = 16;
 
 // Custom animation registered once at module load — used by the "achievement"
 // demo to give a snappy entry that doesn't rely on a stock spring config.
@@ -98,6 +105,7 @@ const SignInSheet: React.FC<{
 }> = ({ visible, onClose, respectMotion }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const insets = useSafeAreaInsets();
 
   return (
     <Modal
@@ -111,7 +119,10 @@ const SignInSheet: React.FC<{
     >
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : undefined}
-        style={styles.sheet}
+        style={[
+          styles.sheet,
+          { paddingBottom: insets.bottom + BOTTOM_INSET_MIN },
+        ]}
       >
         <SheetHandle />
         <Text style={styles.sheetTitle}>Welcome back</Text>
@@ -174,6 +185,7 @@ const ActionSheet: React.FC<{
   onClose: () => void;
   respectMotion: boolean;
 }> = ({ visible, onClose, respectMotion }) => {
+  const insets = useSafeAreaInsets();
   const item = (label: string, onPress: () => void, destructive = false) => (
     <Pressable
       style={({ pressed }) => [
@@ -205,7 +217,12 @@ const ActionSheet: React.FC<{
       onSwipeComplete={onClose}
       onBackdropPress={onClose}
     >
-      <View style={styles.actionSheetContainer}>
+      <View
+        style={[
+          styles.actionSheetContainer,
+          { paddingBottom: insets.bottom + BOTTOM_INSET_MIN },
+        ]}
+      >
         <View style={styles.actionGroup}>
           {item("Share post", () =>
             ModalManager.alert({
@@ -259,6 +276,7 @@ const FilterSheet: React.FC<{
   onClose: () => void;
   respectMotion: boolean;
 }> = ({ visible, onClose, respectMotion }) => {
+  const insets = useSafeAreaInsets();
   const [sort, setSort] = useState<"newest" | "oldest" | "price">("newest");
   const [filters, setFilters] = useState({
     inStock: true,
@@ -297,7 +315,12 @@ const FilterSheet: React.FC<{
       onSwipeComplete={onClose}
       onBackdropPress={onClose}
     >
-      <View style={styles.sheet}>
+      <View
+        style={[
+          styles.sheet,
+          { paddingBottom: insets.bottom + BOTTOM_INSET_MIN },
+        ]}
+      >
         <SheetHandle />
         <Text style={styles.sheetTitle}>Sort & filter</Text>
 
@@ -329,6 +352,7 @@ const ShareSheet: React.FC<{
   onClose: () => void;
   respectMotion: boolean;
 }> = ({ visible, onClose, respectMotion }) => {
+  const insets = useSafeAreaInsets();
   const targets = [
     { name: "Messages", color: "#34c759" },
     { name: "Mail", color: "#3478f6" },
@@ -348,7 +372,12 @@ const ShareSheet: React.FC<{
       onSwipeComplete={onClose}
       onBackdropPress={onClose}
     >
-      <View style={styles.sheet}>
+      <View
+        style={[
+          styles.sheet,
+          { paddingBottom: insets.bottom + BOTTOM_INSET_MIN },
+        ]}
+      >
         <SheetHandle />
         <Text style={styles.sheetTitle}>Share</Text>
         <Text style={styles.sheetSubtitle}>How would you like to share?</Text>
@@ -469,6 +498,7 @@ const StackedProfile: React.FC<{
   onClose: () => void;
   respectMotion: boolean;
 }> = ({ visible, onClose, respectMotion }) => {
+  const insets = useSafeAreaInsets();
   const [editVisible, setEditVisible] = useState(false);
   const [color, setColor] = useState(palette.accent);
 
@@ -482,7 +512,12 @@ const StackedProfile: React.FC<{
         onSwipeComplete={onClose}
         onBackdropPress={onClose}
       >
-        <View style={styles.sheet}>
+        <View
+          style={[
+            styles.sheet,
+            { paddingBottom: insets.bottom + BOTTOM_INSET_MIN },
+          ]}
+        >
           <SheetHandle />
           <View style={styles.profileRow}>
             <View style={[styles.avatar, { backgroundColor: color }]}>
@@ -542,6 +577,7 @@ const StackedProfile: React.FC<{
 /* ---------------------------------------------------------------------- */
 
 const Demo: React.FC = () => {
+  const insets = useSafeAreaInsets();
   const [signIn, setSignIn] = useState(false);
   const [actions, setActions] = useState(false);
   const [filter, setFilter] = useState(false);
@@ -636,7 +672,12 @@ const Demo: React.FC = () => {
                 onSwipeComplete={() => ModalManager.hide(id)}
                 onBackdropPress={() => ModalManager.hide(id)}
               >
-                <View style={styles.sheet}>
+                <View
+                  style={[
+                    styles.sheet,
+                    { paddingBottom: insets.bottom + BOTTOM_INSET_MIN },
+                  ]}
+                >
                   <SheetHandle />
                   <Text style={styles.sheetTitle}>Dispatched globally</Text>
                   <Text style={styles.sheetSubtitle}>
@@ -714,11 +755,13 @@ const Demo: React.FC = () => {
 
 export default function App() {
   return (
-    <GestureHandlerRootView style={styles.root}>
-      <ModalProvider>
-        <Demo />
-      </ModalProvider>
-    </GestureHandlerRootView>
+    <SafeAreaProvider>
+      <GestureHandlerRootView style={styles.root}>
+        <ModalProvider>
+          <Demo />
+        </ModalProvider>
+      </GestureHandlerRootView>
+    </SafeAreaProvider>
   );
 }
 
