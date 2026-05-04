@@ -199,6 +199,27 @@ const id = ModalManager.show(
 
 Explicit `animationIn` / `animationOut` always override the position default.
 
+### Styling — wrap your content
+
+The Modal's `style` prop applies to the **outer layout container** (matching
+`react-native-modal`'s convention). For a bottom sheet, dialog, or any
+non-fullscreen content, wrap your body in a styled `<View>` so the layout
+container stays transparent and the backdrop shows through above it:
+
+```tsx
+// ❌ Wrong — paints the whole screen white, content sits at the bottom of it
+<Modal isVisible position="bottom" style={{ backgroundColor: "white" }}>
+  <Text>Bottom sheet</Text>
+</Modal>
+
+// ✅ Right — the layout container stays transparent, only the inner view is white
+<Modal isVisible position="bottom">
+  <View style={{ backgroundColor: "white", padding: 24, borderTopLeftRadius: 24 }}>
+    <Text>Bottom sheet</Text>
+  </View>
+</Modal>
+```
+
 ## Props reference
 
 All `react-native-modal` props are supported. modalx-specific additions:

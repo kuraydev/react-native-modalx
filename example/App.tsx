@@ -106,13 +106,14 @@ const Demo: React.FC = () => {
           swipeDirection="down"
           onSwipeComplete={() => setShowBottom(false)}
           onBackdropPress={() => setShowBottom(false)}
-          style={styles.bottomSheet}
         >
-          <View style={styles.bottomSheetGrabber} />
-          <Text style={styles.dialogTitle}>Bottom sheet</Text>
-          <Text style={styles.dialogBody}>
-            Drag me down to dismiss, or tap the backdrop.
-          </Text>
+          <View style={styles.bottomSheet}>
+            <View style={styles.bottomSheetGrabber} />
+            <Text style={styles.dialogTitle}>Bottom sheet</Text>
+            <Text style={styles.dialogBody}>
+              Drag me down to dismiss, or tap the backdrop.
+            </Text>
+          </View>
         </Modal>
       </Section>
 
@@ -185,13 +186,14 @@ const Demo: React.FC = () => {
                 swipeDirection="down"
                 onSwipeComplete={() => ModalManager.hide(id)}
                 onBackdropPress={() => ModalManager.hide(id)}
-                style={styles.bottomSheet}
               >
-                <View style={styles.bottomSheetGrabber} />
-                <Text style={styles.dialogTitle}>Dispatched globally</Text>
-                <Text style={styles.dialogBody}>
-                  No need to wire state into your screen — fire-and-forget.
-                </Text>
+                <View style={styles.bottomSheet}>
+                  <View style={styles.bottomSheetGrabber} />
+                  <Text style={styles.dialogTitle}>Dispatched globally</Text>
+                  <Text style={styles.dialogBody}>
+                    No need to wire state into your screen — fire-and-forget.
+                  </Text>
+                </View>
               </Modal>,
             );
           }}
@@ -270,10 +272,10 @@ const Demo: React.FC = () => {
           avoidKeyboard
           position="bottom"
           onBackdropPress={() => setShowForm(false)}
-          style={styles.bottomSheet}
         >
           <KeyboardAvoidingView
             behavior={Platform.OS === "ios" ? "padding" : undefined}
+            style={styles.bottomSheet}
           >
             <View style={styles.bottomSheetGrabber} />
             <Text style={styles.dialogTitle}>What's your name?</Text>
