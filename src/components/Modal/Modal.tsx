@@ -4,6 +4,7 @@ import React, {
   useEffect,
   useImperativeHandle,
   useMemo,
+  useRef,
   useState,
 } from "react";
 import {
@@ -208,11 +209,9 @@ export const Modal = forwardRef<ModalHandle, ModalProps>(
     /* ---------------------------- animation runners ---------------------------- */
     const runOpen = useCallback(() => {
       handleOnModalWillShow();
-      // If we're cutting in mid close-animation, preserve the visual position
-      // by carrying over `1 - progress` into the new phase. For matching
-      // enter/exit pairs (the position defaults) this produces a perfectly
-      // smooth reversal instead of a snap; for asymmetric pairs it minimises
-      // the visible jump.
+      // Mid-close → open: carry over `1 - progress` so the visual position
+      // is preserved instead of snapping. For matching enter/exit pairs
+      // this produces a perfectly smooth reversal.
       const carryOver =
         phase.value === "out"
           ? Math.max(0, Math.min(1, 1 - progress.value))
@@ -279,8 +278,7 @@ export const Modal = forwardRef<ModalHandle, ModalProps>(
 
     const runClose = useCallback(() => {
       handleOnModalWillHide();
-      // Mirror of `runOpen` — preserve visual position when starting close
-      // mid open-animation.
+      // Mirror of `runOpen` — preserve visual position on mid-flight reversal.
       const carryOver =
         phase.value === "in" ? Math.max(0, Math.min(1, 1 - progress.value)) : 0;
       phase.value = "out";
@@ -427,7 +425,41 @@ export const Modal = forwardRef<ModalHandle, ModalProps>(
       onSwipeCancel,
     });
 
-    /* ---------------------------------- render --------------------------------- */
+    // Mount the native <RNModal> only while the modal is in use. Idle
+    // mounted modals leave subscribed GestureDetectors and lingering iOS
+    // UIWindows that can swallow taps on the underlying screen.
+    const [shouldMountHost, setShouldMountHost] = useState(!!isVisibleProp);
+
+    useEffect(() => {
+      if (status !== "closed") setShouldMountHost(true);
+    }, [status]);
+
+    // Fallback teardown — onDismiss isn't reliably fired on Android.
+    const teardownTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+    useEffect(() => {
+      if (teardownTimerRef.current) {
+        clearTimeout(teardownTimerRef.current);
+        teardownTimerRef.current = null;
+      }
+      if (status === "closed" && shouldMountHost) {
+        teardownTimerRef.current = setTimeout(
+          () => setShouldMountHost(false),
+          600,
+        );
+      }
+      return () => {
+        if (teardownTimerRef.current) {
+          clearTimeout(teardownTimerRef.current);
+          teardownTimerRef.current = null;
+        }
+      };
+    }, [status, shouldMountHost]);
+
+    const handleNativeDismiss = useCallback(() => {
+      setShouldMountHost(false);
+      handleOnDismiss();
+    }, [handleOnDismiss]);
+
     const hostVisible = status !== "closed";
 
     const renderedContent = (
@@ -476,8 +508,6 @@ export const Modal = forwardRef<ModalHandle, ModalProps>(
     );
 
     if (!coverScreen) {
-      // Inline mode: nothing to dismiss on the native side, so it's safe to
-      // unmount entirely once the close animation finishes.
       if (!hostVisible) return null;
       return (
         <View
@@ -490,13 +520,8 @@ export const Modal = forwardRef<ModalHandle, ModalProps>(
       );
     }
 
-    // coverScreen: keep the native <RNModal> mounted at all times and toggle
-    // its `visible` prop. RN translates `visible: true → false` into a
-    // proper iOS `dismissViewController(animated:)` call. Inner content is
-    // always rendered (matching react-native-modal's pattern) so the React
-    // tree stays stable across the dismiss commit — iOS gets a clean
-    // visible-prop transition rather than a simultaneous children-removal,
-    // which is what was leaving the touch system stuck on iOS.
+    if (!shouldMountHost) return null;
+
     return (
       <RNModal
         transparent
@@ -504,7 +529,7 @@ export const Modal = forwardRef<ModalHandle, ModalProps>(
         visible={hostVisible}
         onRequestClose={onBackPress}
         onShow={handleOnShow}
-        onDismiss={handleOnDismiss}
+        onDismiss={handleNativeDismiss}
         supportedOrientations={supportedOrientations}
         presentationStyle={presentationStyle}
         hardwareAccelerated={hardwareAccelerated}

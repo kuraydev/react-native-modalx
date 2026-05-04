@@ -48,10 +48,6 @@ const palette = {
   destructive: "#e64545",
 };
 
-/* ---------------------------------------------------------------------- */
-/*                              Reusable bits                             */
-/* ---------------------------------------------------------------------- */
-
 const Divider: React.FC = () => <View style={styles.divider} />;
 
 const Section: React.FC<{
@@ -93,10 +89,6 @@ const Btn: React.FC<{
 );
 
 const SheetHandle = () => <View style={styles.handle} />;
-
-/* ---------------------------------------------------------------------- */
-/*                       1. Sign-in bottom sheet                          */
-/* ---------------------------------------------------------------------- */
 
 const SignInSheet: React.FC<{
   visible: boolean;
@@ -187,16 +179,13 @@ const SignInSheet: React.FC<{
   );
 };
 
-/* ---------------------------------------------------------------------- */
-/*                      2. iOS-style action sheet                          */
-/* ---------------------------------------------------------------------- */
-
 const ActionSheet: React.FC<{
   visible: boolean;
   onClose: () => void;
   respectMotion: boolean;
 }> = ({ visible, onClose, respectMotion }) => {
   const insets = useSafeAreaInsets();
+  const pendingPostClose = useRef<null | (() => void)>(null);
   const item = (label: string, onPress: () => void, destructive = false) => (
     <Pressable
       style={({ pressed }) => [
@@ -204,7 +193,9 @@ const ActionSheet: React.FC<{
         pressed && styles.actionItemPressed,
       ]}
       onPress={() => {
-        onPress();
+        // Don't dispatch the alert until this sheet has fully closed —
+        // stacking two native iOS modals leaves the touch system stuck.
+        pendingPostClose.current = onPress;
         onClose();
       }}
     >
@@ -227,6 +218,11 @@ const ActionSheet: React.FC<{
       swipeDirection="down"
       onSwipeComplete={onClose}
       onBackdropPress={onClose}
+      onModalHide={() => {
+        const action = pendingPostClose.current;
+        pendingPostClose.current = null;
+        action?.();
+      }}
     >
       <View
         style={[
@@ -277,10 +273,6 @@ const ActionSheet: React.FC<{
     </Modal>
   );
 };
-
-/* ---------------------------------------------------------------------- */
-/*                    3. Filter & sort bottom sheet                        */
-/* ---------------------------------------------------------------------- */
 
 const FilterSheet: React.FC<{
   visible: boolean;
@@ -354,10 +346,6 @@ const FilterSheet: React.FC<{
   );
 };
 
-/* ---------------------------------------------------------------------- */
-/*                          4. Share sheet                                 */
-/* ---------------------------------------------------------------------- */
-
 const ShareSheet: React.FC<{
   visible: boolean;
   onClose: () => void;
@@ -424,10 +412,6 @@ const ShareSheet: React.FC<{
   );
 };
 
-/* ---------------------------------------------------------------------- */
-/*                       5. Image lightbox                                 */
-/* ---------------------------------------------------------------------- */
-
 const Lightbox: React.FC<{
   visible: boolean;
   onClose: () => void;
@@ -465,10 +449,6 @@ const Lightbox: React.FC<{
   </Modal>
 );
 
-/* ---------------------------------------------------------------------- */
-/*                      6. Achievement (spring zoom)                       */
-/* ---------------------------------------------------------------------- */
-
 const Achievement: React.FC<{
   visible: boolean;
   onClose: () => void;
@@ -499,10 +479,6 @@ const Achievement: React.FC<{
     </View>
   </Modal>
 );
-
-/* ---------------------------------------------------------------------- */
-/*                    7. Stacked: profile + edit avatar                    */
-/* ---------------------------------------------------------------------- */
 
 const StackedProfile: React.FC<{
   visible: boolean;
@@ -582,10 +558,6 @@ const StackedProfile: React.FC<{
     </>
   );
 };
-
-/* ---------------------------------------------------------------------- */
-/*                              Top-level app                              */
-/* ---------------------------------------------------------------------- */
 
 const Demo: React.FC = () => {
   const insets = useSafeAreaInsets();
