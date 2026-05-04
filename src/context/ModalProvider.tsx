@@ -20,8 +20,18 @@ export const ModalProvider: React.FC<ModalProviderProps> = ({ children }) => {
   return (
     <>
       {children}
-      {entries.map(({ id, element }) =>
-        React.cloneElement(element, { key: id }),
+      {entries.map((entry) =>
+        // Inject `isVisible` (flipped by ModalManager.hide) and an
+        // `onModalHide` that finalises removal once the close animation
+        // has actually played. The user's own `onModalHide` is preserved.
+        React.cloneElement(entry.element, {
+          key: entry.id,
+          isVisible: entry.isVisible,
+          onModalHide: () => {
+            entry.element.props.onModalHide?.();
+            ModalManager._remove(entry.id);
+          },
+        }),
       )}
     </>
   );

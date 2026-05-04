@@ -6,6 +6,12 @@ export type ManagedModalEntry = {
   id: string;
   /** The full modal element (must be a `<Modal>` or compatible component). */
   element: ReactElement<ModalProps>;
+  /**
+   * Whether the entry should be visible. Flipped to `false` by
+   * {@link ModalManager.hide} so the Modal can play its close animation;
+   * the entry is removed from the queue only after `onModalHide` fires.
+   */
+  isVisible: boolean;
 };
 
 type Subscriber = (entries: ManagedModalEntry[]) => void;
@@ -33,24 +39,43 @@ class ModalManagerSingleton {
 
   show(element: ReactElement<ModalProps>): string {
     const id = `modalx_${++this.counter}_${Date.now()}`;
-    this.entries = [...this.entries, { id, element }];
+    this.entries = [...this.entries, { id, element, isVisible: true }];
     this.notify();
     return id;
   }
 
   update(id: string, element: ReactElement<ModalProps>): void {
-    this.entries = this.entries.map((e) => (e.id === id ? { id, element } : e));
+    this.entries = this.entries.map((e) =>
+      e.id === id ? { ...e, element } : e,
+    );
     this.notify();
   }
 
+  /**
+   * Trigger a graceful close. The Modal's `isVisible` flips false, the
+   * close animation plays, and the entry is removed from the queue once
+   * `onModalHide` fires (wired up by `<ModalProvider>`).
+   */
   hide(id: string): void {
-    this.entries = this.entries.filter((e) => e.id !== id);
+    this.entries = this.entries.map((e) =>
+      e.id === id ? { ...e, isVisible: false } : e,
+    );
     this.notify();
   }
 
   hideAll(): void {
     if (this.entries.length === 0) return;
-    this.entries = [];
+    this.entries = this.entries.map((e) => ({ ...e, isVisible: false }));
+    this.notify();
+  }
+
+  /**
+   * Internal — called by `<ModalProvider>` after `onModalHide` fires to
+   * actually remove the entry from the tree. End-users should call
+   * {@link hide} instead.
+   */
+  _remove(id: string): void {
+    this.entries = this.entries.filter((e) => e.id !== id);
     this.notify();
   }
 
@@ -75,6 +100,13 @@ class ModalManagerSingleton {
     this.entries = [];
     this.subscribers.clear();
     this.counter = 0;
+  }
+
+  /** Test-only — synchronously remove every entry. */
+  _resetEntries(): void {
+    if (this.entries.length === 0) return;
+    this.entries = [];
+    this.notify();
   }
 }
 

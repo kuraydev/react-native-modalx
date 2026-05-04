@@ -492,9 +492,11 @@ export const Modal = forwardRef<ModalHandle, ModalProps>(
 
     // coverScreen: keep the native <RNModal> mounted at all times and toggle
     // its `visible` prop. RN translates `visible: true → false` into a
-    // proper iOS `dismissViewController(animated:)` call. Returning null
-    // here while the native modal is still presented can leave iOS's modal
-    // window stuck, which blocks touches on the underlying screen.
+    // proper iOS `dismissViewController(animated:)` call. Inner content is
+    // always rendered (matching react-native-modal's pattern) so the React
+    // tree stays stable across the dismiss commit — iOS gets a clean
+    // visible-prop transition rather than a simultaneous children-removal,
+    // which is what was leaving the touch system stuck on iOS.
     return (
       <RNModal
         transparent
@@ -510,7 +512,7 @@ export const Modal = forwardRef<ModalHandle, ModalProps>(
         onOrientationChange={onOrientationChange}
         testID={modalTestID}
       >
-        {hostVisible ? inner : null}
+        {inner}
       </RNModal>
     );
   },
