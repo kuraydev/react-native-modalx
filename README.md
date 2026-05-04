@@ -5,6 +5,12 @@
 [![npm](https://img.shields.io/npm/v/react-native-modalx?style=flat-square)](https://www.npmjs.com/package/react-native-modalx)
 [![license](https://img.shields.io/npm/l/react-native-modalx?style=flat-square)](./LICENSE)
 
+<p align="center">
+  <img src="./assets/ss1.png" alt="react-native-modalx screenshot 1" width="280" />
+  &nbsp;
+  <img src="./assets/ss2.png" alt="react-native-modalx screenshot 2" width="280" />
+</p>
+
 ## Why?
 
 `react-native-modal` is wonderful, but it ships in 2026 still on top of `react-native-animatable` and `Animated` + `PanResponder`. **modalx** keeps the API but rewires the internals:
