@@ -17,7 +17,7 @@
 
 **modalx** picks up where it left off: same API surface so migration is a one-line import change, but the internals are rebuilt on the modern stack.
 
-- 🆕 Built for **React Native 0.78+** and the **New Architecture** (Fabric + Bridgeless) — actively maintained
+- 🆕 Built for **React Native 0.78+** and the **New Architecture** (Fabric)
 - ⚡ Animations driven by **Reanimated 3** worklets — no JS-thread jank
 - 👆 Swipes powered by **`react-native-gesture-handler` v2** — plays nicely with nested scrollables
 - 🪄 **Drop-in API** — change one import line, your existing props keep working
