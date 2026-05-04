@@ -185,19 +185,13 @@ const ActionSheet: React.FC<{
   respectMotion: boolean;
 }> = ({ visible, onClose, respectMotion }) => {
   const insets = useSafeAreaInsets();
-  const pendingPostClose = useRef<null | (() => void)>(null);
-  const item = (label: string, onPress: () => void, destructive = false) => (
+  const item = (label: string, destructive = false) => (
     <Pressable
       style={({ pressed }) => [
         styles.actionItem,
         pressed && styles.actionItemPressed,
       ]}
-      onPress={() => {
-        // Don't dispatch the alert until this sheet has fully closed —
-        // stacking two native iOS modals leaves the touch system stuck.
-        pendingPostClose.current = onPress;
-        onClose();
-      }}
+      onPress={onClose}
     >
       <Text
         style={[
@@ -218,11 +212,6 @@ const ActionSheet: React.FC<{
       swipeDirection="down"
       onSwipeComplete={onClose}
       onBackdropPress={onClose}
-      onModalHide={() => {
-        const action = pendingPostClose.current;
-        pendingPostClose.current = null;
-        action?.();
-      }}
     >
       <View
         style={[
@@ -231,30 +220,13 @@ const ActionSheet: React.FC<{
         ]}
       >
         <View style={styles.actionGroup}>
-          {item("Share post", () =>
-            ModalManager.alert({
-              title: "Shared",
-              message: "Sent to clipboard.",
-            }),
-          )}
+          {item("Share post")}
           <Divider />
-          {item("Save to favorites", () =>
-            ModalManager.alert({ title: "Saved" }),
-          )}
+          {item("Save to favorites")}
           <Divider />
-          {item("Copy link", () =>
-            ModalManager.alert({ title: "Link copied" }),
-          )}
+          {item("Copy link")}
           <Divider />
-          {item(
-            "Report this post",
-            () =>
-              ModalManager.alert({
-                title: "Reported",
-                message: "Thanks for letting us know.",
-              }),
-            true,
-          )}
+          {item("Report this post", true)}
         </View>
         <View style={styles.actionGroup}>
           <Pressable
