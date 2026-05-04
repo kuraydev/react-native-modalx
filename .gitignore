@@ -59,3 +59,6 @@ example/.expo/
 example/web-build/
 example/dist/
 example/node_modules/
+
+# Local AI assistant guidance — keep local, don't ship
+CLAUDE.md

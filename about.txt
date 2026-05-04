@@ -1,0 +1,44 @@
+react-native-modalx
+====================
+
+A modern, Reanimated-first drop-in replacement for react-native-modal.
+
+Built for React Native 0.78+ and the New Architecture (Fabric). Targets
+the latest stable RN as well. Animations run on the UI thread via
+react-native-reanimated 3; swipes are powered by react-native-gesture-handler
+v2 and play nicely with nested ScrollViews.
+
+Drop-in: every public prop from react-native-modal carries the same name
+and the same shape. To migrate, change one import line:
+
+    - import Modal from "react-native-modal";
+    + import Modal from "react-native-modalx";
+
+What's new on top:
+
+- Imperative `useModal()` hook + `<Modal ref={...}>` handle.
+- Global `<ModalProvider>` + `ModalManager` for queue / stack-style modals.
+- Promise-based `ModalManager.confirm()` and `ModalManager.alert()` that
+  resolve only after the native window is fully dismissed — chains like
+  `await confirm(); await alert();` just work.
+- 27 built-in animation presets (slide / fade / zoom / bounce / flip / pulse).
+- Animation configs accept Reanimated `withSpring` / `withTiming` shapes,
+  with an optional `preset` field so the physics drives a visible transform.
+- `registerAnimation()` registry that mirrors react-native-animatable's API.
+- `position="center" | "top" | "bottom" | "fullscreen"` shortcut for
+  layout + animation defaults.
+- Respects the OS reduced-motion accessibility setting.
+- Reliable `onModalHide` timing: fires only after iOS finishes its native
+  dismiss — no more "screen unresponsive after close" bugs.
+- Dual CJS / ESM build with full TypeScript types.
+
+Peer dependencies:
+
+  react                       >=18.3
+  react-native                >=0.78
+  react-native-reanimated     >=3.10
+  react-native-gesture-handler>=2.16
+
+Repo:    https://github.com/kuraydev/react-native-modalx
+License: MIT
+Author:  FreakyCoder <kurayogun@gmail.com>
