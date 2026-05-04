@@ -208,8 +208,17 @@ export const Modal = forwardRef<ModalHandle, ModalProps>(
     /* ---------------------------- animation runners ---------------------------- */
     const runOpen = useCallback(() => {
       handleOnModalWillShow();
+      // If we're cutting in mid close-animation, preserve the visual position
+      // by carrying over `1 - progress` into the new phase. For matching
+      // enter/exit pairs (the position defaults) this produces a perfectly
+      // smooth reversal instead of a snap; for asymmetric pairs it minimises
+      // the visible jump.
+      const carryOver =
+        phase.value === "out"
+          ? Math.max(0, Math.min(1, 1 - progress.value))
+          : 0;
       phase.value = "in";
-      progress.value = 0;
+      progress.value = carryOver;
       dragX.value = 0;
       dragY.value = 0;
       swipeOpacityFactor.value = 1;
@@ -270,8 +279,12 @@ export const Modal = forwardRef<ModalHandle, ModalProps>(
 
     const runClose = useCallback(() => {
       handleOnModalWillHide();
+      // Mirror of `runOpen` — preserve visual position when starting close
+      // mid open-animation.
+      const carryOver =
+        phase.value === "in" ? Math.max(0, Math.min(1, 1 - progress.value)) : 0;
       phase.value = "out";
-      progress.value = 0;
+      progress.value = carryOver;
       swipeOpacityFactor.value = 1;
 
       if (reduceMotion) {
