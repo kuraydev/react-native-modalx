@@ -69,8 +69,9 @@ export const buildAnimation = (
   }
 
   if (isReanimatedConfig(animation)) {
+    const presetName = animation.preset ?? fallbackPresetName;
     return {
-      frames: resolveByName(fallbackPresetName, dims).frames,
+      frames: resolveByName(presetName, dims).frames,
       config: animation,
     };
   }

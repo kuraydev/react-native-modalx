@@ -174,9 +174,14 @@ const id = ModalManager.show(
 // 2. Custom keyframe object (react-native-animatable shape)
 <Modal animationIn={{ from: { opacity: 0, scale: 0.7 }, to: { opacity: 1, scale: 1 } }} />
 
-// 3. Reanimated config — full control, springs supported
-<Modal animationIn={{ type: "spring", damping: 18, stiffness: 220 }} />
-<Modal animationIn={{ type: "timing", duration: 250 }} />
+// 3. Reanimated config — full control, springs supported.
+//    Pair with `preset` so the physics drives a visible transform.
+<Modal animationIn={{ type: "spring", preset: "zoomIn", damping: 11, stiffness: 110 }} />
+<Modal animationIn={{ type: "timing", preset: "slideInUp", duration: 250 }} />
+
+// Without `preset`, the config drives the position default's frames
+// (fadeIn for `position="center"`), which makes a spring's overshoot
+// invisible — set `preset` if you want the boing.
 ```
 
 ### Built-in presets

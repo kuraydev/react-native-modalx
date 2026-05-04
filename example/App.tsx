@@ -121,14 +121,20 @@ const Demo: React.FC = () => {
         <Modal
           isVisible={showSpring}
           respectReducedMotion={respectMotion}
-          animationIn={{ type: "spring", damping: 14, stiffness: 220 }}
-          animationOut={{ type: "timing", duration: 200 }}
+          animationIn={{
+            type: "spring",
+            preset: "zoomIn",
+            damping: 11,
+            stiffness: 110,
+            mass: 0.7,
+          }}
+          animationOut={{ type: "timing", preset: "zoomOut", duration: 180 }}
           onBackdropPress={() => setShowSpring(false)}
         >
           <View style={styles.dialog}>
             <Text style={styles.dialogTitle}>Boing!</Text>
             <Text style={styles.dialogBody}>
-              The entrance is a spring; exit is a quick fade.
+              The entrance is a spring driving a zoom — visible overshoot.
             </Text>
             <Btn label="Close" onPress={() => setShowSpring(false)} />
           </View>

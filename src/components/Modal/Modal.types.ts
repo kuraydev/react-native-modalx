@@ -93,10 +93,16 @@ export type CustomKeyframeAnimation = {
 /**
  * A modern, Reanimated-native animation config. Pick `timing` for
  * duration-based animations or `spring` for physics-based ones.
+ *
+ * Pair with a `preset` to drive that preset's frames (translate, scale,
+ * etc.) with the chosen physics. Without `preset`, the config drives the
+ * position-default preset's frames — for `position="center"` that's a
+ * `fadeIn`/`fadeOut`, where a spring's overshoot is invisible. If you
+ * want the bouncy effect, set `preset: "zoomIn"` (or similar).
  */
 export type ReanimatedAnimationConfig =
-  | ({ type: "timing" } & WithTimingConfig)
-  | ({ type: "spring" } & WithSpringConfig);
+  | ({ type: "timing"; preset?: AnimationPresetName } & WithTimingConfig)
+  | ({ type: "spring"; preset?: AnimationPresetName } & WithSpringConfig);
 
 /**
  * A union of every accepted form for `animationIn` / `animationOut`.

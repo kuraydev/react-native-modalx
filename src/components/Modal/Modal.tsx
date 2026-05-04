@@ -223,7 +223,7 @@ export const Modal = forwardRef<ModalHandle, ModalProps>(
 
       const { config } = enterAnim;
       if (config?.type === "spring") {
-        const { type: _t, ...spring } = config;
+        const { type: _t, preset: _p, ...spring } = config;
         progress.value = withSpring(
           1,
           spring as WithSpringConfig,
@@ -232,7 +232,7 @@ export const Modal = forwardRef<ModalHandle, ModalProps>(
           },
         );
       } else if (config?.type === "timing") {
-        const { type: _t, ...timing } = config;
+        const { type: _t, preset: _p, ...timing } = config;
         progress.value = withTiming(
           1,
           timing as WithTimingConfig,
@@ -283,7 +283,7 @@ export const Modal = forwardRef<ModalHandle, ModalProps>(
 
       const { config } = exitAnim;
       if (config?.type === "spring") {
-        const { type: _t, ...spring } = config;
+        const { type: _t, preset: _p, ...spring } = config;
         progress.value = withSpring(
           1,
           spring as WithSpringConfig,
@@ -292,7 +292,7 @@ export const Modal = forwardRef<ModalHandle, ModalProps>(
           },
         );
       } else if (config?.type === "timing") {
-        const { type: _t, ...timing } = config;
+        const { type: _t, preset: _p, ...timing } = config;
         progress.value = withTiming(
           1,
           timing as WithTimingConfig,
