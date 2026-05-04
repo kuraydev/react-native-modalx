@@ -73,7 +73,7 @@ describe("ModalManager + ModalProvider", () => {
       );
     });
     expect(queryByText("queued")).not.toBeNull();
-    expect(id).toMatch(/^modalx_/);
+    expect(id).toMatch(/^modalkit_/);
 
     await act(async () => {
       ModalManager.hideAll();

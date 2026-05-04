@@ -1,5 +1,5 @@
 /**
- * react-native-modalx
+ * react-native-modalkit
  *
  * Modern, Reanimated-first replacement for `react-native-modal`. Drop-in API
  * compatible — switch the import line and you're done. Bonus: imperative
@@ -7,7 +7,7 @@
  * `react-native-gesture-handler` v2 swipes, and reduced-motion awareness.
  *
  * @example
- *   import Modal from "react-native-modalx";
+ *   import Modal from "react-native-modalkit";
  *
  *   export const MyDialog = ({ isVisible, onClose }) => (
  *     <Modal

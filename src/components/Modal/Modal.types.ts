@@ -195,7 +195,7 @@ export type ModalProps = ViewProps & {
   /* ----- misc ----- */
   hideModalContentWhileAnimating?: boolean;
 
-  /* ----- modalx extras ----- */
+  /* ----- modalkit extras ----- */
   /**
    * Convenience shortcut for common modal placements. When set, sensible
    * defaults are applied for `animationIn` / `animationOut` / `style`.

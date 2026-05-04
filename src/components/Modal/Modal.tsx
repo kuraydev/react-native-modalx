@@ -118,15 +118,15 @@ export const Modal = forwardRef<ModalHandle, ModalProps>(
 
     if (useNativeDriver !== undefined) {
       warnOnce(
-        "modalx:useNativeDriver",
-        "[react-native-modalx] `useNativeDriver` is a no-op — animations run on the " +
+        "modalkit:useNativeDriver",
+        "[react-native-modalkit] `useNativeDriver` is a no-op — animations run on the " +
           "UI thread via Reanimated. You can safely remove this prop.",
       );
     }
     if (useNativeDriverForBackdrop !== undefined) {
       warnOnce(
-        "modalx:useNativeDriverForBackdrop",
-        "[react-native-modalx] `useNativeDriverForBackdrop` is a no-op — backdrop " +
+        "modalkit:useNativeDriverForBackdrop",
+        "[react-native-modalkit] `useNativeDriverForBackdrop` is a no-op — backdrop " +
           "animations run on the UI thread via Reanimated. You can safely remove this prop.",
       );
     }

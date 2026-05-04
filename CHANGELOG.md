@@ -101,5 +101,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   stacked modals, blur backdrop, keyboard-avoiding form, custom registered
   animation, promise-based confirm, reduced-motion toggle).
 
-[Unreleased]: https://github.com/kuraydev/react-native-modalx/compare/v0.1.0...HEAD
-[0.1.0]: https://github.com/kuraydev/react-native-modalx/releases/tag/v0.1.0
+[Unreleased]: https://github.com/kuraydev/react-native-modalkit/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/kuraydev/react-native-modalkit/releases/tag/v0.1.0

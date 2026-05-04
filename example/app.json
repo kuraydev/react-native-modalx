@@ -1,17 +1,17 @@
 {
   "expo": {
-    "name": "modalx example",
-    "slug": "react-native-modalx-example",
+    "name": "modalkit example",
+    "slug": "react-native-modalkit-example",
     "version": "0.1.0",
     "orientation": "portrait",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.kuraydev.modalxexample"
+      "bundleIdentifier": "com.kuraydev.modalkitexample"
     },
     "android": {
-      "package": "com.kuraydev.modalxexample"
+      "package": "com.kuraydev.modalkitexample"
     },
     "web": {
       "bundler": "metro"

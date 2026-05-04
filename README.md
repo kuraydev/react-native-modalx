@@ -1,21 +1,21 @@
-# react-native-modalx
+# react-native-modalkit
 
 > Modern, [Reanimated](https://docs.swmansion.com/react-native-reanimated/)-first **drop-in replacement** for [`react-native-modal`](https://github.com/react-native-modal/react-native-modal). Same props you know, all running on the UI thread, plus an imperative API, queue-aware `<ModalProvider>`, and gesture v2 swipes.
 
-[![npm](https://img.shields.io/npm/v/react-native-modalx?style=flat-square)](https://www.npmjs.com/package/react-native-modalx)
-[![license](https://img.shields.io/npm/l/react-native-modalx?style=flat-square)](./LICENSE)
+[![npm](https://img.shields.io/npm/v/react-native-modalkit?style=flat-square)](https://www.npmjs.com/package/react-native-modalkit)
+[![license](https://img.shields.io/npm/l/react-native-modalkit?style=flat-square)](./LICENSE)
 
 <p align="center">
-  <img src="./assets/ss1.png" alt="react-native-modalx screenshot 1" width="280" />
+  <img src="./assets/ss1.png" alt="react-native-modalkit screenshot 1" width="280" />
   &nbsp;
-  <img src="./assets/ss2.png" alt="react-native-modalx screenshot 2" width="280" />
+  <img src="./assets/ss2.png" alt="react-native-modalkit screenshot 2" width="280" />
 </p>
 
 ## Why?
 
 `react-native-modal` was great for years, but the project is **no longer actively maintained** and has **no support for the New Architecture (Fabric / TurboModules)**. It still leans on `react-native-animatable`, the legacy `Animated` API, and `PanResponder` — all of which are showing their age on modern React Native. Apps adopting the New Arch (default in RN 0.76+) hit edge cases the upstream library can't fix.
 
-**modalx** picks up where it left off: same API surface so migration is a one-line import change, but the internals are rebuilt on the modern stack.
+**modalkit** picks up where it left off: same API surface so migration is a one-line import change, but the internals are rebuilt on the modern stack.
 
 - 🆕 Built for **React Native 0.78+** and the **New Architecture** (Fabric)
 - ⚡ Animations driven by **Reanimated 3** worklets — no JS-thread jank
@@ -29,9 +29,9 @@
 ## Install
 
 ```sh
-npm install react-native-modalx react-native-reanimated react-native-gesture-handler
+npm install react-native-modalkit react-native-reanimated react-native-gesture-handler
 # or
-yarn add react-native-modalx react-native-reanimated react-native-gesture-handler
+yarn add react-native-modalkit react-native-reanimated react-native-gesture-handler
 ```
 
 Then follow the standard setup steps for the two peers:
@@ -55,7 +55,7 @@ Then follow the standard setup steps for the two peers:
 ```tsx
 import React, { useState } from "react";
 import { View, Text, Button } from "react-native";
-import Modal from "react-native-modalx";
+import Modal from "react-native-modalkit";
 
 export const MyDialog = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -73,7 +73,7 @@ export const MyDialog = () => {
         <View
           style={{ padding: 24, backgroundColor: "white", borderRadius: 12 }}
         >
-          <Text>Hello modalx 👋</Text>
+          <Text>Hello modalkit 👋</Text>
         </View>
       </Modal>
     </View>
@@ -87,7 +87,7 @@ For most projects, this is the entire diff:
 
 ```diff
 - import Modal from "react-native-modal";
-+ import Modal from "react-native-modalx";
++ import Modal from "react-native-modalkit";
 ```
 
 Every public prop carries the same name and same shape. Your `animationIn="slideInUp"`, your `swipeDirection={["up", "down"]}`, your `customBackdrop`, your `onModalHide` — all keep working.
@@ -99,10 +99,10 @@ A few props that no longer make sense are accepted with a one-time dev warning:
 | `useNativeDriver`            | accepted, no-op (Reanimated already runs on UI thread) |
 | `useNativeDriverForBackdrop` | accepted, no-op                                        |
 
-If you used `react-native-animatable`'s `registerAnimation`, modalx ships an equivalent:
+If you used `react-native-animatable`'s `registerAnimation`, modalkit ships an equivalent:
 
 ```ts
-import { registerAnimation } from "react-native-modalx";
+import { registerAnimation } from "react-native-modalkit";
 
 registerAnimation("myFancySlide", {
   from: { opacity: 0, translateY: 200 },
@@ -115,7 +115,7 @@ registerAnimation("myFancySlide", {
 For modals you don't want to wire to your render state:
 
 ```tsx
-import { useModal, Modal } from "react-native-modalx";
+import { useModal, Modal } from "react-native-modalkit";
 
 const Screen = () => {
   const modal = useModal();
@@ -144,7 +144,7 @@ For things like global confirms / alerts, mount a `<ModalProvider>` at the app r
 
 ```tsx
 // App.tsx
-import { ModalProvider } from "react-native-modalx";
+import { ModalProvider } from "react-native-modalkit";
 
 export default function App() {
   return (
@@ -159,7 +159,7 @@ export default function App() {
 
 ```tsx
 // anywhere
-import { ModalManager, Modal } from "react-native-modalx";
+import { ModalManager, Modal } from "react-native-modalkit";
 
 const id = ModalManager.show(
   <Modal
@@ -274,7 +274,7 @@ if (ok) {
 
 ## Props reference
 
-All `react-native-modal` props are supported. modalx-specific additions:
+All `react-native-modal` props are supported. modalkit-specific additions:
 
 | Prop                   | Type                                            | Default    | Notes                                                    |
 | ---------------------- | ----------------------------------------------- | ---------- | -------------------------------------------------------- |

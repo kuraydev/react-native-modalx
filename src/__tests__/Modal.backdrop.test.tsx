@@ -13,7 +13,7 @@ describe("Modal — backdrop", () => {
       </Modal>,
     );
 
-    fireEvent.press(getByTestId("modalx-backdrop"));
+    fireEvent.press(getByTestId("modalkit-backdrop"));
     expect(onBackdropPress).toHaveBeenCalledTimes(1);
   });
 
@@ -23,8 +23,8 @@ describe("Modal — backdrop", () => {
         <Text>hello</Text>
       </Modal>,
     );
-    expect(queryByTestId("modalx-backdrop")).toBeNull();
-    expect(queryByTestId("modalx-backdrop-visual")).toBeNull();
+    expect(queryByTestId("modalkit-backdrop")).toBeNull();
+    expect(queryByTestId("modalkit-backdrop-visual")).toBeNull();
   });
 
   it("renders a custom backdrop when provided", () => {

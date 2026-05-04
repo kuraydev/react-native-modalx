@@ -29,7 +29,7 @@ const ConfirmDialog: React.FC<{
           style={[styles.button, styles.secondary]}
           onPress={onCancel}
           accessibilityRole="button"
-          testID="modalx-confirm-cancel"
+          testID="modalkit-confirm-cancel"
         >
           <Text style={styles.secondaryText}>{cancelLabel}</Text>
         </Pressable>
@@ -40,7 +40,7 @@ const ConfirmDialog: React.FC<{
           ]}
           onPress={onConfirm}
           accessibilityRole="button"
-          testID="modalx-confirm-ok"
+          testID="modalkit-confirm-ok"
         >
           <Text style={styles.primaryText}>{confirmLabel}</Text>
         </Pressable>
@@ -62,7 +62,7 @@ const AlertDialog: React.FC<{
         style={[styles.button, styles.primary, styles.fullWidth]}
         onPress={onClose}
         accessibilityRole="button"
-        testID="modalx-alert-ok"
+        testID="modalkit-alert-ok"
       >
         <Text style={styles.primaryText}>{buttonLabel}</Text>
       </Pressable>

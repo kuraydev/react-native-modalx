@@ -1,4 +1,4 @@
-# react-native-modalx — example app
+# react-native-modalkit — example app
 
 A minimal Expo app that exercises every feature of the library.
 

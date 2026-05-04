@@ -1,5 +1,5 @@
 {
-  "name": "react-native-modalx",
+  "name": "react-native-modalkit",
   "version": "0.1.0",
   "description": "A modern, Reanimated-first, fully-customizable Modal for React Native — drop-in replacement for react-native-modal with imperative API, gesture v2 swipes, and built-in stacking.",
   "main": "lib/commonjs/index.js",
@@ -31,19 +31,19 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/kuraydev/react-native-modalx.git"
+    "url": "https://github.com/kuraydev/react-native-modalkit.git"
   },
   "author": "FreakyCoder <kurayogun@gmail.com>",
   "license": "MIT",
-  "homepage": "https://github.com/kuraydev/react-native-modalx#readme",
+  "homepage": "https://github.com/kuraydev/react-native-modalkit#readme",
   "bugs": {
-    "url": "https://github.com/kuraydev/react-native-modalx/issues"
+    "url": "https://github.com/kuraydev/react-native-modalkit/issues"
   },
   "keywords": [
     "react-native",
     "modal",
     "react-native-modal",
-    "modalx",
+    "modalkit",
     "reanimated",
     "gesture-handler",
     "bottom-sheet",

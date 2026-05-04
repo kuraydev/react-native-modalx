@@ -30,7 +30,7 @@ class ModalManagerSingleton {
 
   /**
    * Promise-based confirmation dialog. Wired up by `manager/dialogs.tsx`
-   * — importing anything from `react-native-modalx` is enough to register it.
+   * — importing anything from `react-native-modalkit` is enough to register it.
    */
   confirm!: (options: ConfirmDialogOptions) => Promise<boolean>;
 
@@ -38,7 +38,7 @@ class ModalManagerSingleton {
   alert!: (options: AlertDialogOptions) => Promise<void>;
 
   show(element: ReactElement<ModalProps>): string {
-    const id = `modalx_${++this.counter}_${Date.now()}`;
+    const id = `modalkit_${++this.counter}_${Date.now()}`;
     this.entries = [...this.entries, { id, element, isVisible: true }];
     this.notify();
     return id;

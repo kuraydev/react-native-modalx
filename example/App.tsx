@@ -22,7 +22,7 @@ import Modal, {
   ModalProvider,
   registerAnimation,
   useModal,
-} from "react-native-modalx";
+} from "react-native-modalkit";
 
 /** Minimum gap above the bottom edge / home indicator on every sheet. */
 const BOTTOM_INSET_MIN = 16;
@@ -387,7 +387,7 @@ const Lightbox: React.FC<{
         <Text style={styles.lightboxCloseText}>×</Text>
       </Pressable>
       <Image
-        source={{ uri: "https://picsum.photos/seed/modalx/900/1400" }}
+        source={{ uri: "https://picsum.photos/seed/modalkit/900/1400" }}
         style={styles.lightboxImage}
         resizeMode="contain"
       />
@@ -520,7 +520,7 @@ const Demo: React.FC = () => {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.heading}>react-native-modalx</Text>
+      <Text style={styles.heading}>react-native-modalkit</Text>
       <Text style={styles.subheading}>
         Reanimated-first drop-in replacement for react-native-modal.
       </Text>

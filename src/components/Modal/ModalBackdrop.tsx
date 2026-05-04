@@ -72,7 +72,7 @@ const ModalBackdropComponent: React.FC<ModalBackdropProps> = ({
         animatedStyle,
         style,
       ]}
-      testID="modalx-backdrop-visual"
+      testID="modalkit-backdrop-visual"
     />
   );
 
@@ -88,7 +88,7 @@ const ModalBackdropComponent: React.FC<ModalBackdropProps> = ({
         onPress={onBackdropPress}
         accessibilityRole="button"
         accessibilityLabel="Close modal"
-        testID="modalx-backdrop"
+        testID="modalkit-backdrop"
       />
     </>
   );
