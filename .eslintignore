@@ -1,0 +1,10 @@
+node_modules/**
+lib/**
+coverage/**
+example/**
+*.min.js
+*.bundle.js
+*.snap
+*.log
+*.lock
+*.map
