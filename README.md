@@ -191,13 +191,16 @@ const id = ModalManager.show(
 ### Position shortcuts
 
 ```tsx
-<Modal position="bottom">…</Modal>   // slideInUp / slideOutDown defaults
-<Modal position="top">…</Modal>      // slideInDown / slideOutUp
-<Modal position="center">…</Modal>   // fadeIn / fadeOut (default)
+<Modal position="bottom">…</Modal>   // slideInUp / slideOutDown defaults, edge-to-edge
+<Modal position="top">…</Modal>      // slideInDown / slideOutUp, with horizontal padding
+<Modal position="center">…</Modal>   // fadeIn / fadeOut, with horizontal padding (default)
 <Modal position="fullscreen">…</Modal>
 ```
 
 Explicit `animationIn` / `animationOut` always override the position default.
+`center` and `top` ship with `paddingHorizontal: 16` so dialogs don't reach
+the screen edges; `bottom` and `fullscreen` stay edge-to-edge for sheets and
+lightboxes.
 
 ### Styling — wrap your content
 
@@ -218,6 +221,46 @@ container stays transparent and the backdrop shows through above it:
     <Text>Bottom sheet</Text>
   </View>
 </Modal>
+```
+
+## Lifecycle and chaining modals
+
+Callbacks fire in this order on every close:
+
+1. `onModalWillHide` — close animation is about to start
+2. close animation runs (`animationOutTiming`)
+3. native `<Modal>` dismisses (iOS plays its dismiss; Android instant)
+4. `onModalHide` and `onDismiss` — fire **only after** the native window
+   is fully gone
+
+That last point matters: `onModalHide` is your "safe to dispatch the next
+modal" signal. Anything you do inside it — a follow-up alert, navigation,
+opening another sheet — runs against a clean iOS modal stack, so you don't
+get the dreaded "screen unresponsive after close" issue:
+
+```tsx
+<Modal
+  isVisible={visible}
+  onBackdropPress={() => setVisible(false)}
+  onModalHide={() => {
+    // Safe to dispatch another modal here — the previous is fully gone.
+    ModalManager.alert({ title: "Saved!" });
+  }}
+>
+  …
+</Modal>
+```
+
+Same guarantee for the promise-based helpers — `await` chains just work:
+
+```tsx
+const ok = await ModalManager.confirm({
+  title: "Delete?",
+  destructive: true,
+});
+if (ok) {
+  await ModalManager.alert({ title: "Deleted" }); // safe; no stacking
+}
 ```
 
 ## Props reference
