@@ -428,9 +428,7 @@ export const Modal = forwardRef<ModalHandle, ModalProps>(
     });
 
     /* ---------------------------------- render --------------------------------- */
-    if (status === "closed") {
-      return null;
-    }
+    const hostVisible = status !== "closed";
 
     const renderedContent = (
       <ModalContent
@@ -478,6 +476,9 @@ export const Modal = forwardRef<ModalHandle, ModalProps>(
     );
 
     if (!coverScreen) {
+      // Inline mode: nothing to dismiss on the native side, so it's safe to
+      // unmount entirely once the close animation finishes.
+      if (!hostVisible) return null;
       return (
         <View
           pointerEvents="box-none"
@@ -489,11 +490,16 @@ export const Modal = forwardRef<ModalHandle, ModalProps>(
       );
     }
 
+    // coverScreen: keep the native <RNModal> mounted at all times and toggle
+    // its `visible` prop. RN translates `visible: true → false` into a
+    // proper iOS `dismissViewController(animated:)` call. Returning null
+    // here while the native modal is still presented can leave iOS's modal
+    // window stuck, which blocks touches on the underlying screen.
     return (
       <RNModal
         transparent
         animationType="none"
-        visible
+        visible={hostVisible}
         onRequestClose={onBackPress}
         onShow={handleOnShow}
         onDismiss={handleOnDismiss}
@@ -504,7 +510,7 @@ export const Modal = forwardRef<ModalHandle, ModalProps>(
         onOrientationChange={onOrientationChange}
         testID={modalTestID}
       >
-        {inner}
+        {hostVisible ? inner : null}
       </RNModal>
     );
   },
