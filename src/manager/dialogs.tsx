@@ -71,8 +71,10 @@ const AlertDialog: React.FC<{
 };
 
 /**
- * Promise-based confirmation dialog. Resolves with `true` when the user
- * confirms, `false` when they cancel (or tap the backdrop / hardware back).
+ * Promise-based confirmation dialog. The promise resolves with the user's
+ * choice ONLY AFTER the modal has fully animated closed and iOS has
+ * dismissed its native window — so callers can safely `await confirm(); …;`
+ * and dispatch another modal next without triggering native-modal stacking.
  *
  * Requires `<ModalProvider>` mounted at the app root.
  */
@@ -81,40 +83,46 @@ export const confirmDialog = (
 ): Promise<boolean> =>
   new Promise<boolean>((resolve) => {
     let id = "";
-    const settle = (result: boolean) => {
+    let result = false;
+    const startClose = (r: boolean) => {
+      result = r;
       ModalManager.hide(id);
-      resolve(result);
     };
+    const finishClose = () => resolve(result);
     id = ModalManager.show(
       <Modal
         isVisible
-        onBackdropPress={() => settle(false)}
-        onBackButtonPress={() => settle(false)}
+        onBackdropPress={() => startClose(false)}
+        onBackButtonPress={() => startClose(false)}
+        onModalHide={finishClose}
       >
         <ConfirmDialog
           options={options}
-          onConfirm={() => settle(true)}
-          onCancel={() => settle(false)}
+          onConfirm={() => startClose(true)}
+          onCancel={() => startClose(false)}
         />
       </Modal>,
     );
   });
 
 /**
- * Promise-based alert dialog. Resolves once the user dismisses it.
+ * Promise-based alert dialog. Resolves only after the modal has fully
+ * animated closed — safe to chain via `await`.
  *
  * Requires `<ModalProvider>` mounted at the app root.
  */
 export const alertDialog = (options: AlertDialogOptions): Promise<void> =>
   new Promise<void>((resolve) => {
     let id = "";
-    const settle = () => {
-      ModalManager.hide(id);
-      resolve();
-    };
+    const startClose = () => ModalManager.hide(id);
     id = ModalManager.show(
-      <Modal isVisible onBackdropPress={settle} onBackButtonPress={settle}>
-        <AlertDialog options={options} onClose={settle} />
+      <Modal
+        isVisible
+        onBackdropPress={startClose}
+        onBackButtonPress={startClose}
+        onModalHide={() => resolve()}
+      >
+        <AlertDialog options={options} onClose={startClose} />
       </Modal>,
     );
   });

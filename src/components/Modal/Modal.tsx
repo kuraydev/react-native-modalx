@@ -200,11 +200,15 @@ export const Modal = forwardRef<ModalHandle, ModalProps>(
       handleOnModalShow();
     }, [handleOnModalShow]);
 
+    // onCloseComplete only marks the React-side animation as done. The user
+    // facing `onModalHide` callback is intentionally fired LATER, from
+    // `handleNativeDismiss` below — once iOS has actually torn down the
+    // native modal window. That's the only timing at which it's safe for
+    // a consumer to dispatch the next modal in a chain.
     const onCloseComplete = useCallback(() => {
       setStatus("closed");
       setSwipeDirectionForClose(null);
-      handleOnModalHide();
-    }, [handleOnModalHide]);
+    }, []);
 
     /* ---------------------------- animation runners ---------------------------- */
     const runOpen = useCallback(() => {
@@ -434,7 +438,26 @@ export const Modal = forwardRef<ModalHandle, ModalProps>(
       if (status !== "closed") setShouldMountHost(true);
     }, [status]);
 
-    // Fallback teardown — onDismiss isn't reliably fired on Android.
+    // Single source of truth for "the modal is now fully gone, including the
+    // native window". Fires the user-facing `onModalHide` and `onDismiss`
+    // callbacks, then unmounts the host. Triggered by RN's onDismiss on iOS
+    // (after UIKit finishes its dismiss animation) or by a timeout fallback
+    // on Android (RN's onDismiss is iOS-only).
+    const fullyDismissedRef = useRef(false);
+    const finalizeDismissal = useCallback(() => {
+      if (fullyDismissedRef.current) return;
+      fullyDismissedRef.current = true;
+      handleOnDismiss();
+      handleOnModalHide();
+      setShouldMountHost(false);
+    }, [handleOnDismiss, handleOnModalHide]);
+
+    // Reset the latch whenever we re-open so a subsequent close can fire.
+    useEffect(() => {
+      if (status === "opening") fullyDismissedRef.current = false;
+    }, [status]);
+
+    // Android (and iOS edge cases) fallback — onDismiss isn't guaranteed.
     const teardownTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     useEffect(() => {
       if (teardownTimerRef.current) {
@@ -442,10 +465,7 @@ export const Modal = forwardRef<ModalHandle, ModalProps>(
         teardownTimerRef.current = null;
       }
       if (status === "closed" && shouldMountHost) {
-        teardownTimerRef.current = setTimeout(
-          () => setShouldMountHost(false),
-          600,
-        );
+        teardownTimerRef.current = setTimeout(finalizeDismissal, 250);
       }
       return () => {
         if (teardownTimerRef.current) {
@@ -453,12 +473,7 @@ export const Modal = forwardRef<ModalHandle, ModalProps>(
           teardownTimerRef.current = null;
         }
       };
-    }, [status, shouldMountHost]);
-
-    const handleNativeDismiss = useCallback(() => {
-      setShouldMountHost(false);
-      handleOnDismiss();
-    }, [handleOnDismiss]);
+    }, [status, shouldMountHost, finalizeDismissal]);
 
     const hostVisible = status !== "closed";
 
@@ -529,7 +544,7 @@ export const Modal = forwardRef<ModalHandle, ModalProps>(
         visible={hostVisible}
         onRequestClose={onBackPress}
         onShow={handleOnShow}
-        onDismiss={handleNativeDismiss}
+        onDismiss={finalizeDismissal}
         supportedOrientations={supportedOrientations}
         presentationStyle={presentationStyle}
         hardwareAccelerated={hardwareAccelerated}

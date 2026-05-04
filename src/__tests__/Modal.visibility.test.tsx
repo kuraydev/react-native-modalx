@@ -63,6 +63,7 @@ describe("Modal — visibility transitions", () => {
   });
 
   it("fires onModalWillHide / onModalHide on close", async () => {
+    jest.useFakeTimers();
     const onModalWillHide = jest.fn();
     const onModalHide = jest.fn();
 
@@ -88,7 +89,14 @@ describe("Modal — visibility transitions", () => {
       );
     });
 
+    // onModalHide is intentionally fired AFTER iOS dismiss completes (or via
+    // a 250ms timeout fallback in tests / Android).
+    await act(async () => {
+      jest.advanceTimersByTime(300);
+    });
+
     expect(onModalWillHide).toHaveBeenCalledTimes(1);
     expect(onModalHide).toHaveBeenCalled();
+    jest.useRealTimers();
   });
 });

@@ -98,10 +98,6 @@ const SignInSheet: React.FC<{
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const insets = useSafeAreaInsets();
-  // Stacking two native iOS Modals simultaneously leaves the touch system
-  // in a bad state. Queue any post-close action and fire it after this
-  // sheet has fully animated closed.
-  const pendingPostClose = useRef<null | (() => void)>(null);
 
   return (
     <Modal
@@ -112,11 +108,6 @@ const SignInSheet: React.FC<{
       swipeDirection="down"
       onSwipeComplete={onClose}
       onBackdropPress={onClose}
-      onModalHide={() => {
-        const action = pendingPostClose.current;
-        pendingPostClose.current = null;
-        action?.();
-      }}
     >
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : undefined}
@@ -152,18 +143,7 @@ const SignInSheet: React.FC<{
           style={styles.input}
         />
 
-        <Btn
-          label="Sign in"
-          onPress={() => {
-            pendingPostClose.current = () => {
-              ModalManager.alert({
-                title: "Signed in",
-                message: email ? `Welcome back, ${email}` : "Demo only.",
-              });
-            };
-            onClose();
-          }}
-        />
+        <Btn label="Sign in" onPress={onClose} />
 
         <View style={styles.dividerRow}>
           <View style={styles.dividerLine} />
@@ -362,12 +342,7 @@ const ShareSheet: React.FC<{
             <Pressable
               key={t.name}
               style={styles.shareTarget}
-              onPress={() => {
-                onClose();
-                ModalManager.alert({
-                  title: `Shared via ${t.name}`,
-                });
-              }}
+              onPress={onClose}
             >
               <View style={[styles.shareIcon, { backgroundColor: t.color }]}>
                 <Text style={styles.shareIconText}>{t.name.slice(0, 1)}</Text>
