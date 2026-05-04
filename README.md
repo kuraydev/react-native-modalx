@@ -99,15 +99,22 @@ A few props that no longer make sense are accepted with a one-time dev warning:
 | `useNativeDriver`            | accepted, no-op (Reanimated already runs on UI thread) |
 | `useNativeDriverForBackdrop` | accepted, no-op                                        |
 
-### Coming from `react-native-global-modal-2`?
+### Coming from one of my older modal libraries?
 
-Modalkit also supersedes my older
-[`react-native-global-modal-2`](https://github.com/kuraydev/react-native-global-modal-2)
-library. The imperative API maps 1:1 — replace `<GlobalModal>` with
-`<ModalProvider>` and `ModalController.show/hide` with
-`ModalManager.show/hide`. You also get every roadmap item from that
-library out of the box (alerts, action sheets, bottom sheets, gestures,
-accessibility) and drop the unmaintained `react-native-modal` peer dep.
+Modalkit supersedes both of these — they're now archived:
+
+- [`react-native-global-modal-2`](https://github.com/kuraydev/react-native-global-modal-2)
+  — replace `<GlobalModal>` with `<ModalProvider>`, and `ModalController.show/hide`
+  with `ModalManager.show/hide`. Same imperative shape, plus everything
+  on that library's roadmap (alerts, action sheets, bottom sheets,
+  gestures, accessibility) — and no more `react-native-modal` peer dep.
+- [`react-native-modal-2`](https://github.com/kuraydev/react-native-modal-2)
+  — `<Modal visible>` becomes `<Modal isVisible>`, `<AnimatedModal>` collapses
+  back into the same `<Modal>` (it's animated by default), and animation
+  strings change from `animationType="fade"` /
+  `animationIn="slide" + animationDirection="up"` to standard preset names
+  (`fadeIn`, `slideInUp`, `bounceIn`, `zoomIn`). Backdrop props pass through
+  unchanged. All animations now run on the UI thread via Reanimated 3.
 
 ### Custom animations
 
