@@ -805,7 +805,9 @@ const styles = StyleSheet.create({
     backgroundColor: palette.card,
     paddingTop: 12,
     paddingHorizontal: 24,
-    paddingBottom: 36,
+    // 48pt clears the home-indicator zone (~34pt) on Face-ID iPhones and
+    // looks fine on devices without one.
+    paddingBottom: 48,
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
   },
@@ -869,7 +871,7 @@ const styles = StyleSheet.create({
   /* action sheet */
   actionSheetContainer: {
     paddingHorizontal: 12,
-    paddingBottom: 28,
+    paddingBottom: 40,
     gap: 10,
   },
   actionGroup: {
