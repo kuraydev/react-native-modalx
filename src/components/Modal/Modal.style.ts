@@ -16,10 +16,13 @@ export const modalStyles = StyleSheet.create({
   content: {
     flex: 1,
     justifyContent: "center",
+    paddingHorizontal: 16,
   },
   contentTop: {
     flex: 1,
     justifyContent: "flex-start",
+    paddingHorizontal: 16,
+    paddingTop: 16,
   },
   contentBottom: {
     flex: 1,
