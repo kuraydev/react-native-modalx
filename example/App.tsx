@@ -41,11 +41,11 @@ const palette = {
   destructive: "#e64545",
 };
 
-const sectionDivider = <View style={styles.divider} />;
-
 /* ---------------------------------------------------------------------- */
 /*                              Reusable bits                             */
 /* ---------------------------------------------------------------------- */
+
+const Divider: React.FC = () => <View style={styles.divider} />;
 
 const Section: React.FC<{
   title: string;
@@ -213,15 +213,15 @@ const ActionSheet: React.FC<{
               message: "Sent to clipboard.",
             }),
           )}
-          {sectionDivider}
+          <Divider />
           {item("Save to favorites", () =>
             ModalManager.alert({ title: "Saved" }),
           )}
-          {sectionDivider}
+          <Divider />
           {item("Copy link", () =>
             ModalManager.alert({ title: "Link copied" }),
           )}
-          {sectionDivider}
+          <Divider />
           {item(
             "Report this post",
             () =>
