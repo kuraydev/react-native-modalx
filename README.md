@@ -13,15 +13,18 @@
 
 ## Why?
 
-`react-native-modal` is wonderful, but it ships in 2026 still on top of `react-native-animatable` and `Animated` + `PanResponder`. **modalx** keeps the API but rewires the internals:
+`react-native-modal` was great for years, but the project is **no longer actively maintained** and has **no support for the New Architecture (Fabric / TurboModules)**. It still leans on `react-native-animatable`, the legacy `Animated` API, and `PanResponder` — all of which are showing their age on modern React Native. Apps adopting the New Arch (default in RN 0.76+) hit edge cases the upstream library can't fix.
 
+**modalx** picks up where it left off: same API surface so migration is a one-line import change, but the internals are rebuilt on the modern stack.
+
+- 🆕 Built for **React Native 0.78+** and the **New Architecture** (Fabric + Bridgeless) — actively maintained
 - ⚡ Animations driven by **Reanimated 3** worklets — no JS-thread jank
 - 👆 Swipes powered by **`react-native-gesture-handler` v2** — plays nicely with nested scrollables
 - 🪄 **Drop-in API** — change one import line, your existing props keep working
 - 🧰 New: imperative `useModal()` hook, global `<ModalProvider>` + `ModalManager` for queue / stack-style modals
 - 🦴 New: `position="bottom" | "top" | "center" | "fullscreen"` shortcut
 - ♿️ New: respects the OS reduced-motion setting out of the box
-- 🆕 Built for **React Native 0.78+** and the **New Architecture** (Fabric)
+- 🔁 New: reliable `onModalHide` timing — fires only after the native dismiss completes, so chained modals never stack and lock the screen
 
 ## Install
 
