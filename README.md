@@ -99,6 +99,18 @@ A few props that no longer make sense are accepted with a one-time dev warning:
 | `useNativeDriver`            | accepted, no-op (Reanimated already runs on UI thread) |
 | `useNativeDriverForBackdrop` | accepted, no-op                                        |
 
+### Coming from `react-native-global-modal-2`?
+
+Modalkit also supersedes my older
+[`react-native-global-modal-2`](https://github.com/kuraydev/react-native-global-modal-2)
+library. The imperative API maps 1:1 — replace `<GlobalModal>` with
+`<ModalProvider>` and `ModalController.show/hide` with
+`ModalManager.show/hide`. You also get every roadmap item from that
+library out of the box (alerts, action sheets, bottom sheets, gestures,
+accessibility) and drop the unmaintained `react-native-modal` peer dep.
+
+### Custom animations
+
 If you used `react-native-animatable`'s `registerAnimation`, modalkit ships an equivalent:
 
 ```ts
